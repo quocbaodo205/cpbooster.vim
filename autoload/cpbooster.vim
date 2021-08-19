@@ -1,5 +1,7 @@
 let s:cpboosterWindowRatio = 3.0 / 7.0
 
+execute 'autocmd TermClose * wincmd w'
+
 if (has('nvim'))
   let s:termCommand = 'botright vsplit | term '
 else
@@ -19,17 +21,23 @@ function cpbooster#DeleteTerminalBuffers()
   endif
 endfunction
 
+function cpbooster#startInsert(...)
+  if (has('nvim'))
+    execute 'startinsert'
+  endif
+endfunction
+
 function cpbooster#CpboosterTest(...)
   execute 'w'
   call cpbooster#DeleteTerminalBuffers()
   let totalSize = winwidth(0)
   if a:0 == 0
-    execute s:termCommand . 'cpbooster test "%"'
+    execute s:termCommand . 'cpbooster test "%" && read'
   else
-    execute s:termCommand . 'cpbooster test "%" -t ' . a:1	
+    execute s:termCommand . 'cpbooster test "%" -t ' . a:1	. ' && read'
   endif
+  call cpbooster#startInsert()
   execute 'vertical resize ' . string(totalSize * s:cpboosterWindowRatio) 
-  execute 'wincmd w'
 endfunction
 
 function cpbooster#CpboosterDebug(...)
@@ -37,14 +45,11 @@ function cpbooster#CpboosterDebug(...)
   call cpbooster#DeleteTerminalBuffers()
   let totalSize = winwidth(0)
   if a:0 == 0
-    execute s:termCommand . 'cpbooster test "%" -d'
-    if (has('nvim'))
-      execute 'startinsert'
-    endif
+    execute s:termCommand . 'cpbooster test "%" -d && read'
   else
-    execute s:termCommand . 'cpbooster test "%" -d -t ' . a:1
-    execute 'wincmd w'
+    execute s:termCommand . 'cpbooster test "%" -d -t ' . a:1 . ' && read'
   endif
+  call cpbooster#startInsert()
   execute 'vertical resize ' . string(totalSize * s:cpboosterWindowRatio) 
 endfunction
 
@@ -53,14 +58,11 @@ function cpbooster#CpboosterRDebug(...)
   call cpbooster#DeleteTerminalBuffers()
   let totalSize = winwidth(0)
   if a:0 == 0
-    execute s:termCommand . 'cpbooster test "%" -d --nc'
-    if (has('nvim'))
-      execute 'startinsert'
-    endif
+    execute s:termCommand . 'cpbooster test "%" -d --nc && read'
   else
-    execute s:termCommand . 'cpbooster test "%" -d --nc -t ' . a:1
-    execute 'wincmd w'
+    execute s:termCommand . 'cpbooster test "%" -d --nc -t ' . a:1 . ' && read'
   endif
+  call cpbooster#startInsert()
   execute 'vertical resize ' . string(totalSize * s:cpboosterWindowRatio) 
 endfunction
 
@@ -69,12 +71,12 @@ function cpbooster#CpboosterRTest(...)
   call cpbooster#DeleteTerminalBuffers()
   let totalSize = winwidth(0)
   if a:0 == 0
-    execute s:termCommand . 'cpbooster test "%" --nc'
+    execute s:termCommand . 'cpbooster test "%" --nc && read'
   else
-    execute s:termCommand . 'cpbooster test "%" --nc -t ' . a:1	
+    execute s:termCommand . 'cpbooster test "%" --nc -t ' . a:1	. ' && read'
   endif
+  call cpbooster#startInsert()
   execute 'vertical resize ' . string(totalSize * s:cpboosterWindowRatio) 
-  execute 'wincmd w'
 endfunction
 
 function cpbooster#CpboosterAddtc(...)
