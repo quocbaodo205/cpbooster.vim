@@ -117,6 +117,6 @@ function cpbooster#CpboosterSubmit(...)
   else
     execute s:termCommand . 'cpbooster submit "%"'
   endif
+  call cpbooster#startInsert()
   execute 'vertical resize ' . string(totalSize * s:cpboosterWindowRatio) 
-  execute 'wincmd w'
 endfunction
